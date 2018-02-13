@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+
+</head>
+
+<body ng-app="pokedex">
+
+	<div class="container">
+		<h1>Pokésir</h1>
+
+		<!-- Search -->
+		<div></div>
+
+        <div ng-controller="myPokeController">
+            Name: <input ng-model="name">
+            <div ng-repeat="x in pokemonList">
+                <h2>Pokemon name: {{x.name}}</h2>
+                <h3>Level: {{x.level}}</h3>
+            </div>
+            
+            <!-- <select ng-model="selectedPokemonRepeatDirective">
+                <option ng-repeat="x in pokemonList" value={{x.id}} >{{x.name}}</option>
+            </select> -->
+            <!-- <h2><b> [Repeat] You selected: </b>{{selectedPokemonRepeatDirective.name}} with a level of {{selectedPokemon.level}}</h2> -->
+
+            <select ng-model="selectedPokemon" class="pokemon-select" ng-options="x.name for x in pokemonList"> </select>
+            <h2>You selected {{selectedPokemon.name}} with a level of {{selectedPokemon.level}}</h2>
+
+        </div>
+
+        <div ng-controller="api">
+            <div ng-repeat="x in pokemonList">
+                <h2>Pokemon name: {{x.name}}</h2>
+                <h3>Level: {{x.resource_uri}}</h3>
+            </div>
+        </div>
+
+        <div ng-controller="changePokemon">
+                <button ng-click="executeChange()">Go!</button>
+                <p>The button has been clicked {{count}} times</p>
+        </div>
+        
+
+        <div ng-controller="firstController">
+            {{nombre}}
+        </div>
+
+        <div ng-repeat="item in pokemonList">
+                <h1>{{item.name}}</h1>
+                <p>{{item.level}}</p>
+        </div>
+
+        <div ng-controller="api">
+            <div ng-repeat="item in apiListPokemon">
+                    <b>{{item.name}}: </b>{{item.resource_uri}}</p>
+            </div>
+        </div>
+
+		<!-- Pokémon information -->
+		<div></div>
+
+	</div>
+
+    <!-- Dependencies -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-resource.min.js"></script>
+
+    <!-- Pokedex app -->
+    <script src="js/pokedex.js"></script>
+
+
+</body>
+</html>
