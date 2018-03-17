@@ -1,80 +1,117 @@
 <!DOCTYPE html>
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-
-</head>
-
-<body ng-app="pokedex">
-
-	<div class="container">
-		<h1>Pokésir</h1>
-
-		<!-- Search -->
-		<div></div>
-
-        <div ng-controller="myPokeController">
-            Name: <input ng-model="name">
-            <div ng-repeat="x in pokemonList">
-                <h2>Pokemon name: {{x.name}}</h2>
-                <h3>Level: {{x.level}}</h3>
-            </div>
-            
-            <!-- <select ng-model="selectedPokemonRepeatDirective">
-                <option ng-repeat="x in pokemonList" value={{x.id}} >{{x.name}}</option>
-            </select> -->
-            <!-- <h2><b> [Repeat] You selected: </b>{{selectedPokemonRepeatDirective.name}} with a level of {{selectedPokemon.level}}</h2> -->
-
-            <select ng-model="selectedPokemon" class="pokemon-select" ng-options="x.name for x in pokemonList"> </select>
-            <h2>You selected {{selectedPokemon.name}} with a level of {{selectedPokemon.level}}</h2>
-
-        </div>
-
-        <div ng-controller="api">
-            <div ng-repeat="x in pokemonList">
-                <h2>Pokemon name: {{x.name}}</h2>
-                <h3>Level: {{x.resource_uri}}</h3>
-            </div>
-        </div>
-
-        <div ng-controller="changePokemon">
-                <button ng-click="executeChange()">Go!</button>
-                <p>The button has been clicked {{count}} times</p>
-        </div>
-        
-
-        <div ng-controller="firstController">
-            {{nombre}}
-        </div>
-
-        <div ng-repeat="item in pokemonList">
-                <h1>{{item.name}}</h1>
-                <p>{{item.level}}</p>
-        </div>
-
-        <div ng-controller="api">
-            <div ng-repeat="item in apiListPokemon">
-                    <b>{{item.name}}: </b>{{item.resource_uri}}</p>
-            </div>
-        </div>
-
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title></title>
+		<!-- <link rel="stylesheet" href="css/bootstrap.min.css" /> -->
+		<!-- Compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+	</head>
+	<style>
+		ul:not(.browser-default) > li {
+		list-style-type: none;
+		text-transform: capitalize;
+		}
+		input.select-dropdown {
+		display: inline-block;
+		}
+		input.select-dropdown::first-letter {
+		text-transform: capitalize !important;
+		}
+		.select-wrapper input.select-dropdown {
+		text-transform: capitalize !important;
+		}
+	</style>
+	<body ng-app="pokedex">
+		<div class="container">
+			<!-- Search -->
+			<div class="container">
+				<h2>Pokésir</h2>
+				<div class="row">
+					<div class="col s12">
+						<div ng-controller="pokemonCrawler">
+							<div class="row">
+								<div class="col s3">
+									<label for="filter">Search by identifier </label>
+									<input name="id" ng-model="pokemon.id" placeholder="Enter pokemon identifier" ng-change="updateSelectSection()" />
+								</div>
+								<div class="col s3">
+									<label for="filter">Search by name </label>
+									<input name="filter" ng-model="pokemon.pokemon_species.name" ng-change="updateSelectSection()" />
+								</div>
+								<div class="col s3">
+									<label for="filter">Select your pokemon </label>
+									<select name="pokemonSelect" id="pokemonSelect" ng-model="pokemon.id" ng-change="updatePokemonSelection(pokemon.id)">
+										<option style="display:none" value="">Select a pokemon</option>
+										<option ng-repeat="pokemon in pokemons | filter:pokemon.pokemon_species.name | orderBy:'pokemon_species.name':false" ng-class="{reverse: reverse}" value="{{pokemon.id}}">{{pokemon.pokemon_species.name}}</option>
+									</select>
+									<!-- 
+										<select ng-model="selectedPokemon" class="pokemon-select" ng-options="x.pokemon_species.name for x in pokemons | orderBy:'pokemon_species.name':false" ng-class="{reverse: reverse}" ng-change="updatePokemonSelection(selectedPokemon.entry_number)"> 
+										        <option style="display:none" value="">Select a pokemon</option>
+										    </select> -->
+								</div>
+								<div class="col s3">
+									<button id="go" ng-click="searchPok(pokemon)">GO !</button>
+								</div>
+							</div>
+							<p>Pokemon identifier: {{pokemon.id}}</p>
+							<h4>Search results</h4>
+							<div class="row">
+								<div id="col s3" class="collection-bag" style="display:none">
+									<span>You have selected {{singlePokemon.pokemonName}}</span>
+									<ul class="collection">
+										<li class="collection-item avatar">
+											<img src="{{singlePokemon.pokemonImage}}" alt="" class="circle">
+											<span class="title">Name</span>
+											<p>{{singlePokemon.pokemonName}} <br>
+											</p>
+											<a href="#!" class="secondary-content"></a>
+										</li>
+										<li class="collection-item avatar">
+											<span class="title">Weight</span>
+											<p>{{singlePokemon.weight}} <br>
+												Pounds
+											</p>
+											<a href="#!" class="secondary-content"></a>
+										</li>
+										<li class="collection-item avatar">
+											<span class="title">Height</span>
+											<p>{{singlePokemon.height}} <br>
+												feets
+											</p>
+											<a href="#!" class="secondary-content"></a>
+										</li>
+										<li class="collection-item avatar">
+											<span class="title">Powers</span>
+											<p>First Line <br>
+												Second Line
+											</p>
+											<a href="#!" class="secondary-content"></a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- <div ng-controller="changePokemon">
+			<button ng-click="executeChange()">Go!</button>
+			<p>The button has been clicked {{count}} times</p>
+			</div> -->
 		<!-- Pokémon information -->
 		<div></div>
-
-	</div>
-
-    <!-- Dependencies -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/angular.min.js"></script>
-    <script src="js/angular-resource.min.js"></script>
-
-    <!-- Pokedex app -->
-    <script src="js/pokedex.js"></script>
-
-
-</body>
+		</div>
+		<!-- Dependencies -->
+		<script src="js/jquery.min.js"></script>
+		<!-- <script src="js/bootstrap.min.js"></script> -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+		<script src="js/angular.min.js"></script>
+		<script src="js/angular-resource.min.js"></script>
+		<!-- Pokedex app -->
+		<script src="js/pokedex.js"></script>
+		<!-- Compiled and minified JavaScript -->
+	</body>
 </html>
+
